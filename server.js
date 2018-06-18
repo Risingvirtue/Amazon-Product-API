@@ -24,7 +24,8 @@ app.get("/id/*/secret/*/tag/*/upc/*", function (req, res) {
 	if (upccode.length < 12 ){
 		upccode = "0" + upccode;
 	}
-	lookUp(req.params[3]);
+	lookUp(upccode);
+	
 	var count = 0;
 	function lookUp(upccode) {
 		client.itemLookup({
