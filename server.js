@@ -37,7 +37,7 @@ app.get("/id/*/secret/*/tag/*/upc/*", function (req, res) {
 			var merchant = results[0].Offers[0].Offer[0].Merchant[0].Name[0];
 			res.send({merchant: merchant})
 		}).catch(function(err) {
-				if (typeof err['$'] != "undefined" && count != 10) {
+				if (typeof err['$'] != "undefined" && count != 100) {
 					lookUp(upccode);
 					count++;
 				} else {
