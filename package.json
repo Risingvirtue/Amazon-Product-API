@@ -5,6 +5,7 @@
   "name": "",
   "version": "",
   "dependencies": {
+    "amazon-product-api": "^0.4.4",
     "cors": "^2.8.4",
     "express": "^4.16.3"
   }
