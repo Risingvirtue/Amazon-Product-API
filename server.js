@@ -21,9 +21,12 @@ app.get("/id/*/secret/*/tag/*/upc/*", function (req, res) {
 	  awsTag: req.params[2]
 	});
 	var upccode = req.params[3];
-	if (upccode.length < 12 ){
+	if (upccode.length < 12){
 		upccode = "0" + upccode;
+	} else if (upccode.length > 12) {
+		upccode = upccode.slice(upccode.length - 12);
 	}
+	
 	lookUp(upccode);
 	
 	var count = 0;
