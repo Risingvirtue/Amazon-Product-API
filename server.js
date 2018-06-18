@@ -42,7 +42,7 @@ app.get("/id/*/secret/*/tag/*/upc/*", function (req, res) {
 					count++;
 				} else {
 					//console.log(err, i);
-					res.send({error: err})
+					res.send({merchant: null, error: err})
 				}
 		});
 	}
