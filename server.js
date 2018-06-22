@@ -13,41 +13,69 @@ app.get('/', function(req, res) {
 	res.sendFile(__dirname + '/public/index.html');
 });
 
-app.get("/id/*/secret/*/tag/*/upc/*", function (req, res) {
+app.get("/id/:awsId/secret/:awsSecret/tag/:awsTag/type/:type/id/:id", function (req, res) {
+	//console.log(req.params);
 
 	var client = amazon.createClient({
-	  awsId: req.params[0],
-	  awsSecret: req.params[1],
-	  awsTag: req.params[2]
+	  awsId: req.params["awsId"],
+	  awsSecret: req.params["awsSecret"],
+	  awsTag: req.params["awsTag"]
 	});
-	var upccode = req.params[3];
-	if (upccode.length < 12){
-		upccode = "0" + upccode;
-	} else if (upccode.length > 12) {
-		upccode = upccode.slice(upccode.length - 12);
+	var type = req.params["type"].toLowerCase();
+	var upccode = req.params["id"];
+	if (type == 'upc') {
+		if (upccode.length < 12){
+			upccode = "0" + upccode;
+		} else if (upccode.length > 12) {
+			upccode = upccode.slice(upccode.length - 12);
+		}
 	}
 	
-	lookUp(upccode);
+	lookUp(upccode, type);
 	
 	var count = 0;
-	function lookUp(upccode) {
-		client.itemLookup({
-			idType: 'UPC',
-			itemId: upccode,
-			responseGroup: 'OfferFull'
-		}).then(function(results) {
-			
-			var merchant = results[0].Offers[0].Offer[0].Merchant[0].Name[0];
-			res.send({merchant: merchant})
-		}).catch(function(err) {
-				if (typeof err['$'] != "undefined" && count != 100) {
-					lookUp(upccode);
-					count++;
-				} else {
-					//console.log(err, i);
-					res.send({merchant: null, error: err})
-				}
-		});
+	function lookUp(upccode, type) {
+		
+		if (type == 'upc') {
+			client.itemLookup({
+				idType: 'UPC',
+				itemId: upccode,
+				responseGroup: 'OfferFull'
+			}).then(function(results) {
+				
+				var merchant = results[0].Offers[0].Offer[0].Merchant[0].Name[0];
+				res.send({merchant: merchant})
+			}).catch(function(err) {
+					if (typeof err['$'] != "undefined" && count != 100) {
+						lookUp(upccode, type);
+						count++;
+					} else {
+						//console.log(err, i);
+						res.send({merchant: null, error: err})
+					}
+			});
+		} else if (type == 'asin') {
+			client.itemLookup({
+				itemId: upccode,
+				responseGroup: 'OfferFull'
+			}).then(function(results) {
+				
+				var merchant = results[0].Offers[0].Offer[0].Merchant[0].Name[0];
+				res.send({merchant: merchant})
+			}).catch(function(err) {
+					if (typeof err['$'] != "undefined" && count != 100) {
+						lookUp(upccode, type);
+						count++;
+					} else {
+						//console.log(err, i);
+						res.send({merchant: null, error: err})
+					}
+			});
+		} else {
+			res.send({merchant: null, error: 'Incorrect type: ' + type});
+		}
+		
+		
 	}
 	
 });
