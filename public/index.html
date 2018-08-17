@@ -27,7 +27,7 @@ input[type=submit]:hover {
 }
 
 
-div {
+form {
 	
 	border-radius: 5px;
     background-color: #f2f2f2;
@@ -38,16 +38,16 @@ div {
 <body>
 
 
-<div>
+<form autocomplete= "on" id="form1">
 	
 	<label>Secret Id </label><label style="color: red">*</label> 
-    <input type="text" id="secretId" name="username" autocomplete="username" placeholder="SECRET ID">
+    <input type="text" id="secretId" name="username" autocomplete="username" required placeholder="SECRET ID">
 	
 	<label>Secret Password </label><label style="color: red">*</label> 
-    <input type="text" id="secretPass" name="password" autocomplete="password" placeholder="SECRET PASSWORD">
+    <input type="text" id="secretPass" name="password" autocomplete="password" required placeholder="SECRET PASSWORD">
 	
 	<label>Tag </label><label style="color: red">*</label> 
-    <input type="text" id="tag" name="lname" autocomplete="lname" placeholder="TAG">
+    <input type="text" id="tag" name="lname" autocomplete="lname" required placeholder="TAG">
 	
     <label>Type </label><label style="color: red">*</label> 
     <select id="type" name="type">
@@ -56,48 +56,30 @@ div {
     </select>
 
     <label>Id </label><label style="color: red">*</label> 
-    <input type="text" id="id" name="id" placeholder="ID">
+    <input type="text" id="id" name="id" required placeholder="ID">
 		
     <button onclick="myFunction()">Submit</button>
-
+</form>
   <script>
-	function myFunction() {
+	window.onload=function() {
+	  document.getElementById("form1").onsubmit=function() {
 		var secretId = document.getElementById("secretId").value;
-		
-		if (secretId == "") {
-			alert("Please enter a secret id.");
-			return false;
-		}
 		
 		var secretPass = document.getElementById("secretPass").value;
 		
-		if (secretPass == "") {
-			alert("Please enter a secret password.");
-			return false;
-		}
-		
-		var tag =  document.getElementById("tag").value;
-		
-		if (tag == "") {
-			alert("Please enter a tag.");
-			return false;
-		}
+		var tag = document.getElementById("tag").value;
 		
 		var type = document.getElementById("type");
 		var typeValue = type.options[type.selectedIndex].value;
 		
-		
 		var id = document.getElementById("id").value;
 		
-		if (id == "") {
-			alert("Please enter an id.");
-			return false;
-		}
-		
 		window.location.href = '/id/' + secretId + '/secret/' + secretPass + '/tag/' + tag + '/type/' + typeValue + '/id/' + id;
-		
-		
+		window.location = '/id/' + secretId + '/secret/' + secretPass + '/tag/' + tag + '/type/' + typeValue + '/id/' + id;
+		return false;
+	  }
 	}
+	
   </script>
 </div>
 
